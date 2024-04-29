@@ -53,7 +53,7 @@ pip install -r requirements.txt
 そのためOAuthパスワードを取得する必要があります。
 以下のサイトからOAuthパスワードを取得してください。
 
-[config/twitch_config.py](https://twitchapps.com/tmi/)
+[Twitch Chat OAuth Password Generator](https://twitchapps.com/tmi/)
 
 先ほど取得したパスワードをconfig/twitch_config.pyのTWITCH_ACCESS_TOKEN、配信するアカウント名をLOGIN_CHANNELに書き込んでください
 
