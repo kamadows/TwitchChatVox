@@ -16,7 +16,7 @@
 
 ## 概要
 
-このプロジェクトは、MacOSでVOICEVOXを利用し、Twitchのチャットを音声で読み上げるためのソフトウェアです。
+このプロジェクトは、macOSでVOICEVOXを利用し、Twitchのチャットを音声で読み上げるためのソフトウェアです。
 
 ## 動作確認環境
 
@@ -102,7 +102,7 @@ python3 src/coeiroink_list_speakers.py
 
 ## ライセンス
 
-Copyright (c) 2024 Cre8arts
+Copyright (c) 2024 Cre8Arts
 Released under the MIT license
 https://opensource.org/licenses/mit-license.php
 
@@ -111,4 +111,4 @@ https://opensource.org/licenses/mit-license.php
 
 プロジェクトに関する質問やフィードバックは、以下のXアカウントを通じてお寄せください。
 
-[Xアカウント](https://twitter.com/kamadows)
+[Xアカウント](https://x.com/kamadows)
