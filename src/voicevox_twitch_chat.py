@@ -8,7 +8,7 @@ import asyncio
 import httpx
 from twitchio.ext import commands
 from config.servers import SERVERS
-from config.twitch_config import TWITCH_ACCESS_TOKEN, LOGIN_CHANNEL, COMMAND_PREFIX, URL_REPLACEMENT
+from config.twitch_config import TWITCH_ACCESS_TOKEN, LOGIN_CHANNEL, COMMAND_PREFIX, URL_REPLACEMENT, ENABLE_URL_REPLACEMENT
 from config.character_config import CHARACTER, volume
 import requests, json
 import io
@@ -67,7 +67,9 @@ class Bot(commands.Bot):
             return
         print(f"Received message: {message.content}")
         if not message.content.startswith(COMMAND_PREFIX):
-            processed_message = re.sub(r'https?://\S+|http?://\S+', URL_REPLACEMENT, message.content)
+            processed_message = message.content
+            if ENABLE_URL_REPLACEMENT:
+                processed_message = re.sub(r'https?://\S+|http?://\S+', URL_REPLACEMENT, message.content)
             self.vv.speak(processed_message, speaker="VOICEVOX", volume=volume)
 
 def main():
