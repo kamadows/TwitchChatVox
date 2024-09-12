@@ -25,7 +25,6 @@
 - OS: Sonoma 14.4.1
 - VOICEVOX バージョン: 0.19.0
 - SHAREVOX バージョン: 0.2.1
-- COEIROINKv2 バージョン: 2.3.4
 
 ## インストール
 
@@ -86,13 +85,6 @@ speaker_dataにキャラと対応idが出力されます。
 
 ```bash
 python3 src/voicevox_list_speakers.py
-```
-
-COEIROINKv2はsrc/voicevox_list_speakers.pyを使用してください。
-UUIDとstyleIDが出力されるので、そちらをお使いください。
-
-```bash
-python3 src/coeiroink_list_speakers.py
 ```
 
 ### HostとPortを変更している場合
