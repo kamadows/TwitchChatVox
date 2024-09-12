@@ -1,16 +1,23 @@
 import os
 import sys
 import re
+
+# パス設定
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
+
+# 非同期処理やHTTPリクエスト関連のライブラリ
 import asyncio
 import httpx
 from twitchio.ext import commands
+
+# 設定ファイルのインポート
 from config.servers import SERVERS
-from config.twitch_config import TWITCH_ACCESS_TOKEN, LOGIN_CHANNEL, COMMAND_PREFIX, URL_REPLACEMENT, ENABLE_URL_REPLACEMENT
 from config.twitch_config import TWITCH_ACCESS_TOKEN, LOGIN_CHANNEL, COMMAND_PREFIX, URL_REPLACEMENT, ENABLE_URL_REPLACEMENT, MAX_CHAR_COUNT, ENABLE_MAX_CHAR_COUNT
 from config.character_config import CHARACTER, volume
+
+# 音声関連のライブラリ
 import requests, json
 import io
 import wave
@@ -18,11 +25,13 @@ import pyaudio
 import time
 import numpy as np
 
+# Voicevoxクラス（テキストを音声に変換）
 class Voicevox:
     def __init__(self, host, port):
         self.host = host
         self.port = port
 
+    # テキストを音声に変換して再生
     def speak(self, text, speaker, volume):
         params = (("text", text), ("speaker", CHARACTER.get(speaker, {}).get("styleId")))
         init_q = requests.post(f"http://{self.host}:{self.port}/audio_query", params=params)
@@ -35,12 +44,15 @@ class Voicevox:
         audio = io.BytesIO(res.content)
         with wave.open(audio, 'rb') as f:
             p = pyaudio.PyAudio()
+
+            # コールバックで音声再生
             def _callback(in_data, frame_count, time_info, status):
                 data = f.readframes(frame_count)
                 data_np = np.frombuffer(data, dtype=np.int16)
                 data_np = data_np * volume
                 data = data_np.astype(np.int16).tobytes()
                 return (data, pyaudio.paContinue)
+
             stream = p.open(
                 format=p.get_format_from_width(f.getsampwidth()),
                 channels=f.getnchannels(),
@@ -55,26 +67,37 @@ class Voicevox:
             stream.close()
             p.terminate()
 
+# Botクラス（Twitchチャットボット）
 class Bot(commands.Bot):
     def __init__(self, vv):
         super().__init__(token=TWITCH_ACCESS_TOKEN, prefix=COMMAND_PREFIX, initial_channels=[LOGIN_CHANNEL])
         self.vv = vv
 
+    # Botがログイン完了時に呼び出される
     async def event_ready(self):
         print(f"Logged in as {self.nick}")
 
+    # メッセージ受信時の処理
     async def event_message(self, message):
         if message.echo:
             return
         print(f"Received message: {message.content}")
+        
         if not message.content.startswith(COMMAND_PREFIX):
             processed_message = message.content
+
+            # URL置換
             if ENABLE_URL_REPLACEMENT:
                 processed_message = re.sub(r'https?://\S+|http?://\S+', URL_REPLACEMENT, message.content)
+
+            # 文字数制限
             if ENABLE_MAX_CHAR_COUNT and len(processed_message) > MAX_CHAR_COUNT:
                 processed_message = processed_message[:MAX_CHAR_COUNT]
+
+            # 音声再生
             self.vv.speak(processed_message, speaker="VOICEVOX", volume=volume)
 
+# メイン関数
 def main():
     voicevox_config = SERVERS.get("VOICEVOX")
     if voicevox_config:
