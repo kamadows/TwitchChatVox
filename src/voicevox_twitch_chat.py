@@ -9,6 +9,7 @@ import httpx
 from twitchio.ext import commands
 from config.servers import SERVERS
 from config.twitch_config import TWITCH_ACCESS_TOKEN, LOGIN_CHANNEL, COMMAND_PREFIX, URL_REPLACEMENT, ENABLE_URL_REPLACEMENT
+from config.twitch_config import TWITCH_ACCESS_TOKEN, LOGIN_CHANNEL, COMMAND_PREFIX, URL_REPLACEMENT, ENABLE_URL_REPLACEMENT, MAX_CHAR_COUNT, ENABLE_MAX_CHAR_COUNT
 from config.character_config import CHARACTER, volume
 import requests, json
 import io
@@ -70,6 +71,8 @@ class Bot(commands.Bot):
             processed_message = message.content
             if ENABLE_URL_REPLACEMENT:
                 processed_message = re.sub(r'https?://\S+|http?://\S+', URL_REPLACEMENT, message.content)
+            if ENABLE_MAX_CHAR_COUNT and len(processed_message) > MAX_CHAR_COUNT:
+                processed_message = processed_message[:MAX_CHAR_COUNT]
             self.vv.speak(processed_message, speaker="VOICEVOX", volume=volume)
 
 def main():
