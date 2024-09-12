@@ -10,6 +10,8 @@
   - [使用方法](#使用方法)
     - [読み上げ機能の起動](#読み上げ機能の起動)
     - [話者の設定変更](#話者の設定変更)
+    - [URL省略設定](#url省略設定)
+    - [文字数制限設定](#文字数制限設定)
     - [HostとPortを変更している場合](#hostとportを変更している場合)
   - [ライセンス](#ライセンス)
   - [連絡先](#連絡先)
@@ -85,6 +87,29 @@ speaker_dataにキャラと対応idが出力されます。
 
 ```bash
 python3 src/voicevox_list_speakers.py
+```
+
+### URL省略設定
+
+URLが別の文字に変換される設定です。
+config/twitch_config.pyに設定があります。
+デフォルトはオンで「URL省略」と読み上げるように設定しています。
+
+```python
+ENABLE_URL_REPLACEMENT = True  # Trueで有効, Falseで無効
+URL_REPLACEMENT = " URL省略 " # 省略する際に変換する文字列
+```
+
+
+### 文字数制限設定
+
+チャットの読み上げる文字数を制限できる設定です。
+config/twitch_config.pyに設定があります。
+デフォルトはオンで60文字の設定をしています。
+
+```python
+ENABLE_MAX_CHAR_COUNT = True # Trueで有効, Falseで無効
+MAX_CHAR_COUNT = 60 # 読み上げの最大文字数
 ```
 
 ### HostとPortを変更している場合
