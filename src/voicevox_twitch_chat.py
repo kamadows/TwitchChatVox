@@ -99,14 +99,15 @@ class Bot(commands.Bot):
 
 # メイン関数
 def main():
-    voicevox_config = SERVERS.get("VOICEVOX")
-    if voicevox_config:
-        host = voicevox_config.get("host")
-        port = voicevox_config.get("port")
-    else:
-        raise ValueError("Voicevox configuration not found in SERVERS")
+#     voicevox_config = SERVERS.get("VOICEVOX")
+#     if voicevox_config:
+#         host = voicevox_config.get("host")
+#         port = voicevox_config.get("port")
+#     else:
+#         raise ValueError("Voicevox configuration not found in SERVERS")
 
-    vv = Voicevox(host, port)
+#     vv = Voicevox(host, port)
+    vv = "test"
     bot = Bot(vv)
     bot.run()
 
