@@ -91,23 +91,23 @@ class Bot(commands.Bot):
         if not message.content.startswith(COMMAND_PREFIX):
             processed_message = message.content
 
+            if EXCLUDE_EMOTES:
+                processed_message = self.remove_emotes(processed_message, message)
+
             # URL置換
             if ENABLE_URL_REPLACEMENT:
-                processed_message = re.sub(r'https?://\S+|http?://\S+', URL_REPLACEMENT, message.content)
+                processed_message = re.sub(r'https?://\S+|http?://\S+', URL_REPLACEMENT, processed_message)
 
             # 文字数制限
             if ENABLE_MAX_CHAR_COUNT and len(processed_message) > MAX_CHAR_COUNT:
                 processed_message = processed_message[:MAX_CHAR_COUNT]
 
-            if EXCLUDE_EMOTES:
-                processed_message = self.remove_emotes(processed_message)
-
             # 音声再生
             # self.vv.speak(processed_message, speaker="VOICEVOX", volume=volume)
             print(processed_message)
 
-    def remove_emotes(self, message):
-        clean_message = message.content
+    def remove_emotes(self, message_text, message):
+        clean_message = message_text
         if message.tags['emotes']:
             emote_ranges = []
             for emote in message.tags['emotes'].split('/'):
