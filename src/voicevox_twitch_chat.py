@@ -79,6 +79,9 @@ class Bot(commands.Bot):
 
     # メッセージ受信時の処理
     async def event_message(self, message):
+
+        print(message.tags)
+        
         if message.echo:
             return
         print(f"Received message: {message.content}")
@@ -95,7 +98,8 @@ class Bot(commands.Bot):
                 processed_message = processed_message[:MAX_CHAR_COUNT]
 
             # 音声再生
-            self.vv.speak(processed_message, speaker="VOICEVOX", volume=volume)
+            # self.vv.speak(processed_message, speaker="VOICEVOX", volume=volume)
+            print(processed_message)
 
 # メイン関数
 def main():
