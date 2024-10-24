@@ -17,6 +17,8 @@ from config.servers import SERVERS
 from config.twitch_config import TWITCH_ACCESS_TOKEN, LOGIN_CHANNEL, COMMAND_PREFIX, URL_REPLACEMENT, ENABLE_URL_REPLACEMENT, MAX_CHAR_COUNT, ENABLE_MAX_CHAR_COUNT
 from config.character_config import CHARACTER, volume
 
+from config.twitch_config import EXCLUDE_EMOTES
+
 # 音声関連のライブラリ
 import requests, json
 import io
@@ -81,7 +83,7 @@ class Bot(commands.Bot):
     async def event_message(self, message):
 
         print(message.tags)
-        
+
         if message.echo:
             return
         print(f"Received message: {message.content}")
@@ -97,9 +99,28 @@ class Bot(commands.Bot):
             if ENABLE_MAX_CHAR_COUNT and len(processed_message) > MAX_CHAR_COUNT:
                 processed_message = processed_message[:MAX_CHAR_COUNT]
 
+            if EXCLUDE_EMOTES:
+                processed_message = self.remove_emotes(processed_message)
+
             # 音声再生
             # self.vv.speak(processed_message, speaker="VOICEVOX", volume=volume)
             print(processed_message)
+
+    def remove_emotes(self, message):
+        clean_message = message.content
+        if message.tags['emotes']:
+            emote_ranges = []
+            for emote in message.tags['emotes'].split('/'):
+                for range_pair in emote.split(':')[1].split(','):
+                    start, end = map(int, range_pair.split('-'))
+                    emote_ranges.append((start, end))
+            print(emote_ranges)
+
+            for start, end in sorted(emote_ranges, reverse=True):
+                clean_message = clean_message[:start] + clean_message[end+1:]
+
+        print(f"clean_message: {clean_message}")
+        return clean_message
 
 # メイン関数
 def main():
