@@ -14,10 +14,8 @@ from twitchio.ext import commands
 
 # 設定ファイルのインポート
 from config.servers import SERVERS
-from config.twitch_config import TWITCH_ACCESS_TOKEN, LOGIN_CHANNEL, COMMAND_PREFIX, URL_REPLACEMENT, ENABLE_URL_REPLACEMENT, MAX_CHAR_COUNT, ENABLE_MAX_CHAR_COUNT
+from config.twitch_config import TWITCH_ACCESS_TOKEN, LOGIN_CHANNEL, COMMAND_PREFIX, URL_REPLACEMENT, ENABLE_URL_REPLACEMENT, MAX_CHAR_COUNT, ENABLE_MAX_CHAR_COUNT, EXCLUDE_EMOTES
 from config.character_config import CHARACTER, volume
-
-from config.twitch_config import EXCLUDE_EMOTES
 
 # 音声関連のライブラリ
 import requests, json
