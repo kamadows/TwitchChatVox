@@ -14,7 +14,7 @@ from twitchio.ext import commands
 
 # 設定ファイルのインポート
 from config.servers import SERVERS
-from config.twitch_config import TWITCH_ACCESS_TOKEN, LOGIN_CHANNEL, COMMAND_PREFIX, URL_REPLACEMENT, ENABLE_URL_REPLACEMENT, MAX_CHAR_COUNT, ENABLE_MAX_CHAR_COUNT
+from config.twitch_config import TWITCH_ACCESS_TOKEN, LOGIN_CHANNEL, COMMAND_PREFIX, URL_REPLACEMENT, ENABLE_URL_REPLACEMENT, MAX_CHAR_COUNT, ENABLE_MAX_CHAR_COUNT, EXCLUDE_EMOTES
 from config.character_config import CHARACTER, volume
 
 # 音声関連のライブラリ
@@ -86,9 +86,14 @@ class Bot(commands.Bot):
         if not message.content.startswith(COMMAND_PREFIX):
             processed_message = message.content
 
+            # emotesの除去
+            # processed_messageは上書き
+            if EXCLUDE_EMOTES:
+                processed_message = self.remove_emotes(processed_message, message)
+
             # URL置換
             if ENABLE_URL_REPLACEMENT:
-                processed_message = re.sub(r'https?://\S+|http?://\S+', URL_REPLACEMENT, message.content)
+                processed_message = re.sub(r'https?://\S+|http?://\S+', URL_REPLACEMENT, processed_message)
 
             # 文字数制限
             if ENABLE_MAX_CHAR_COUNT and len(processed_message) > MAX_CHAR_COUNT:
@@ -96,6 +101,22 @@ class Bot(commands.Bot):
 
             # 音声再生
             self.vv.speak(processed_message, speaker="VOICEVOX", volume=volume)
+
+    def remove_emotes(self, message):
+        clean_message = message.content
+        if message.tags['emotes']:
+            emote_ranges = []
+            # 'emotes': 'emotesv2_dcd06b30a5c24f6eb871e8f5edbd44f7:0-8,10-18,20-28/112290:53-60,62-69,71-78'みたいな感じなので、
+            # [(0, 8), (10, 18), (20, 28), (53, 60), (62, 69), (71, 78)]だけ抜き出し。
+            for emote in message.tags['emotes'].split('/'):
+                for range_pair in emote.split(':')[1].split(','):
+                    start, end = map(int, range_pair.split('-'))
+                    emote_ranges.append((start, end))
+            # 除去作業。 後ろから。
+            for start, end in sorted(emote_ranges, reverse=True):
+                clean_message = clean_message[:start] + clean_message[end+1:]
+
+        return clean_message
 
 # メイン関数
 def main():
