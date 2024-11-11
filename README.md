@@ -12,6 +12,7 @@
     - [話者の設定変更](#話者の設定変更)
     - [URL省略設定](#url省略設定)
     - [文字数制限設定](#文字数制限設定)
+    - [スタンプ制限設定](#スタンプ制限設定)
     - [HostとPortを変更している場合](#hostとportを変更している場合)
   - [ライセンス](#ライセンス)
   - [連絡先](#連絡先)
@@ -110,6 +111,16 @@ config/twitch_config.pyに設定があります。
 ```python
 ENABLE_MAX_CHAR_COUNT = True # Trueで有効, Falseで無効
 MAX_CHAR_COUNT = 60 # 読み上げの最大文字数
+```
+
+### スタンプ制限設定
+
+スタンプを読み上げないようにできる設定です。
+config/twitch_config.pyに設定があります。
+デフォルトはオンに設定しています。
+
+```python
+EXCLUDE_EMOTES = True　# Trueで有効, Falseで無効
 ```
 
 ### HostとPortを変更している場合
