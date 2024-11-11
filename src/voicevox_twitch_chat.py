@@ -89,7 +89,7 @@ class Bot(commands.Bot):
             # emotesの除去
             # processed_messageは上書き
             if EXCLUDE_EMOTES:
-                processed_message = self.remove_emotes(processed_message, message)
+                processed_message = self.remove_emotes(message)
 
             # URL置換
             if ENABLE_URL_REPLACEMENT:
